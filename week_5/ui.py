@@ -4,7 +4,7 @@ import serial
 from  PyQt5.QtWidgets import QApplication,QWidget,QPushButton,QVBoxLayout,QMessageBox
 
 try :
-    
+  arduino = serial.Serial('COM3', 9600, timeout=1) #เปลี่ยน COM3 เป็นพอร์ตที่ Arduino เชื่อมต่อ
 except Exception as e:
   arduino = None
   print("เชื่อต่อไม่ได้: ",e)

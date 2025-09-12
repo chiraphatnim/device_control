@@ -92,13 +92,14 @@ def main():
         overlay[y1:y2, x1:x2] = frame[y1:y2, x1:x2]
         frame = cv2.addWeighted(overlay, 0.35, frame, 0.65, 0)
 
+        # === ADD: จุดแดงเริ่มต้น (จะแสดงเสมอ) ===
+        cv2.circle(frame, (W - 24, 24), 12, C_BAD, -1)
+
         # Inference on ROI (tune conf/iou for robustness)
         r = model(roi, verbose=False, conf=0.25, iou=0.5)[0]
 
         # Guard: no detections
         if r.keypoints is None or len(r.keypoints)==0 or r.boxes is None or len(r.boxes)==0:
-            msg_th = "ไม่มีคนในโซนโฟกัส"
-            msg_en = "No person in focus ROI"
             #frame = put_text(frame, msg_th, msg_en, (x1+10, y1+30), C_INFO)
             cv2.imshow("Focus Pose @ Receiving", frame)
             if cv2.waitKey(1) & 0xFF == 27: break
@@ -202,7 +203,7 @@ def main():
                 C_OK if knee_ok else C_BAD
             )
 
-        # วงกลมเขียวมุมขวาบนเมื่อทั้ง 3 เป็นสีเขียว
+        # วงกลมเขียวมุมขวาบนเมื่อทั้ง 3 เป็นสีเขียว (ทับจุดแดงที่วาดไว้ก่อนหน้า)
         if arm_ok and back_ok and knee_ok:
             cv2.circle(frame, (W - 24, 24), 12, C_OK, -1)
         # ================== END MOD ==================
